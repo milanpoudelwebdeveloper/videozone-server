@@ -1,4 +1,5 @@
 import express from "express";
+import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import videosRoutes from "./routes/videos.js";
 import commentRoutes from "./routes/comments.js";
@@ -17,6 +18,7 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(cors());
 
+app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/videos", videosRoutes);
 app.use("/api/comments", commentRoutes);
