@@ -13,7 +13,7 @@ export const signUp = async (req, res) => {
     }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = bcrypt.hashSync(password, salt);
-    const q1 = await db.query(
+    await db.query(
       "INSERT INTO users(name, email, password, img) VALUES($1, $2, $3, $4)",
       [name, email, hashedPassword, img]
     );
@@ -108,7 +108,7 @@ export const refreshToken = async (req, res) => {
             message: "Invalid token",
           });
         }
-        const accessToken = jwt.sign({ id: decoded.id }, "secre-key", {
+        const accessToken = jwt.sign({ id: decoded.id }, "secret-key", {
           expiresIn: "10m",
         });
         const foundUser = await db.query("SELECT * FROM users WHERE id = $1", [
