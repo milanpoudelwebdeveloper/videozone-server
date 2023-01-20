@@ -56,7 +56,7 @@ CREATE TABLE likes (
 
 CREATE TABLE dislikes (
     id SERIAL NOT NULL PRIMARY KEY,
-    videoId INT NOT NULL REFERENCES video(id) DELETE on ,
+    videoId INT NOT NULL REFERENCES video(id),
     userId INT NOT NULL REFERENCES users(id)
 );
 
@@ -65,8 +65,8 @@ CREATE TABLE dislikes (
 CREATE TABLE comments (
     id SERIAL NOT NULL PRIMARY KEY,
     videoId INT NOT NULL REFERENCES video(id),
-    userId INT NOT NULL REFERENCES users(id),
-    comment VARCHAR(255) NOT NULL
+    userId INT NOT NULL REFERENCES channels(id),
+    comment VARCHAR(255) NOT NULL,
     createdAt TIMESTAMP NOT NULL DEFAULT NOW()
 );
 

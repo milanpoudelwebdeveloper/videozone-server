@@ -3,7 +3,7 @@ import db from "../db/index.js";
 export const getAllComments = async (req, res) => {
   try {
     const q = await db.query(
-      "SELECT c.*, ch.name as channelName, ch.img as channelImage FROM comments as c INNER JOIN channels as ch ON (ch.id = c.id) WHERE c.videoId = $1  ORDER BY c.id DESC",
+      "SELECT c.*, ch.name as channelName, ch.img as channelImage FROM comments as c INNER JOIN channels as ch ON (ch.id = c.userId) WHERE c.videoId = $1  ORDER BY c.id DESC",
       [req.params.videoId]
     );
     res.status(200).json({
@@ -25,11 +25,13 @@ export const postComment = async (req, res) => {
       "INSERT INTO comments (videoId, userId, comment ) VALUES ($1, $2, $3) returning *",
       [req.params.videoId, req.user, req.body.comment]
     );
+
     if (q.rows.length > 0) {
       const q1 = await db.query(
         "SELECT name as channelName, img as channelImage, id as channelId FROM channels WHERE id = $1",
-        [q.rows[0].userId]
+        [q.rows[0].userid]
       );
+      console.log("the info channel is", q1.rows[0]);
       return res.status(200).json({
         message: "Comment posted successfully",
         newComment: { ...q.rows[0], ...q1.rows[0] },
