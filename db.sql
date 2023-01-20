@@ -27,6 +27,14 @@ CREATE TABLE video (
     videoViews INT NOT NULL DEFAULT 0
 );
 
+
+CREATE TABLE comments (
+    id SERIAL NOT NULL PRIMARY KEY,
+    videoId INT NOT NULL REFERENCES video(id),
+    userId INT NOT NULL REFERENCES channels(id),
+    comment VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE tags (
     id SERIAL NOT NULL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -59,5 +67,6 @@ CREATE TABLE comments (
     videoId INT NOT NULL REFERENCES video(id),
     userId INT NOT NULL REFERENCES users(id),
     comment VARCHAR(255) NOT NULL
+    createdAt TIMESTAMP NOT NULL DEFAULT NOW()
 );
 

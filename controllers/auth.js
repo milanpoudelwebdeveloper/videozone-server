@@ -117,15 +117,15 @@ export const logOut = async (req, res) => {
 
 export const refreshToken = async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
-  if (refreshToken) {
-    try {
+  try {
+    if (refreshToken) {
       jwt.verify(
         refreshToken,
         process.env.REFRESH_SECRET_KEY,
         async (err, decoded) => {
           if (err) {
             return res.status(403).json({
-              message: "Invalid token",
+              message: "Invalid token/not logged",
             });
           }
           const accessToken = jwt.sign(
@@ -156,11 +156,15 @@ export const refreshToken = async (req, res) => {
           }
         }
       );
-    } catch (e) {
-      console.log(e);
-      res.status(500).json({
-        message: "Something went wrong.Please try again",
+    } else {
+      res.status(403).json({
+        message: "Invalid token/not logged in",
       });
     }
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      message: "Something went wrong.Please try again",
+    });
   }
 };
