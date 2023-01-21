@@ -52,7 +52,7 @@ export const login = async (req, res) => {
         },
         process.env.ACCESS_SECRET_KEY,
         {
-          expiresIn: "10m",
+          expiresIn: "1m",
         }
       );
       const refreshToken = jwt.sign(
@@ -61,7 +61,7 @@ export const login = async (req, res) => {
         },
         process.env.REFRESH_SECRET_KEY,
         {
-          expiresIn: "1d",
+          expiresIn: "10m",
         }
       );
       const { password, ...others } = user;
@@ -125,14 +125,14 @@ export const refreshToken = async (req, res) => {
         async (err, decoded) => {
           if (err) {
             return res.status(403).json({
-              message: "Invalid token/not logged",
+              message: "Invalid token/not logged in",
             });
           }
           const accessToken = jwt.sign(
             { id: decoded.id },
             process.env.ACCESS_SECRET_KEY,
             {
-              expiresIn: "10m",
+              expiresIn: "1m",
             }
           );
           const foundUser = await db.query(
@@ -140,7 +140,7 @@ export const refreshToken = async (req, res) => {
             [decoded.id]
           );
           if (foundUser.rows.length <= 0) {
-            return res.status(401).json({
+            return res.status(400).json({
               message: "User/Channel not found",
             });
           }
@@ -157,7 +157,7 @@ export const refreshToken = async (req, res) => {
         }
       );
     } else {
-      res.status(403).json({
+      return res.status(403).json({
         message: "Invalid token/not logged in",
       });
     }
