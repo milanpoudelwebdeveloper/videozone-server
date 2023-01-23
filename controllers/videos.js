@@ -1,12 +1,12 @@
 import db from "../db/index.js";
 
 export const uploadVideo = async (req, res) => {
-  const { title, descp, videoUrl, thumbnail } = req.body;
+  const { title, descp, videoUrl, thumbnail, category } = req.body;
   console.log("req user", req);
   try {
     const q = await db.query(
-      "INSERT INTO video(channelId, title, descp, videoUrl, thumbnail) VALUES($1, $2, $3, $4, $5) returning *",
-      [req.user, title, descp, videoUrl, thumbnail]
+      "INSERT INTO video(channelId, title, descp, videoUrl, thumbnail, category) VALUES($1, $2, $3, $4, $5, $6) returning *",
+      [req.user, title, descp, videoUrl, thumbnail, category]
     );
     if (q.rows.length > 0) {
       res.status(200).json({
@@ -76,14 +76,23 @@ export const updateVideo = async (req, res) => {
 
 //for now get all vidoes later get videos from subscribed channels
 export const getVideos = async (req, res) => {
+  let extraPath = "";
+  let category = req.params.category;
+  if (category && category !== "All") {
+    extraPath = `WHERE category = '${category}'`;
+  }
+
   try {
     const q = await db.query(
-      "SELECT v.*, c.name as channelName FROM video as v JOIN channels as c ON (v.channelId = c.id) ORDER BY v.createdAt DESC "
+      `SELECT v.*, c.name as channelName FROM video as v JOIN channels as c ON (v.channelId = c.id) ${extraPath}  ORDER BY v.createdAt DESC `
     );
     if (q.rows.length > 0) {
       res.status(200).json({
-        message: "Videos fetched successfully",
         videos: q.rows,
+      });
+    } else {
+      res.status(200).json({
+        videos: [],
       });
     }
   } catch (e) {

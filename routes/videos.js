@@ -12,9 +12,9 @@ import {
 
 const router = express.Router();
 
-router.get("/", getVideos);
+router.get("/:category", getVideos);
 router.post("/", verifyToken, uploadVideo);
-router.get("/:id", unAuthVerify, getVideoDetails);
+router.get("/find/:id", unAuthVerify, getVideoDetails);
 router.put("/:id", verifyToken, updateVideo);
 router.delete("/:id", verifyToken, deleteVideo);
 router.put("/like/:id", verifyToken, likeVideo);

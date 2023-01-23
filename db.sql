@@ -27,6 +27,8 @@ CREATE TABLE video (
     videoViews INT NOT NULL DEFAULT 0
 );
 
+ALTER TABLE video ADD COLUMN category VARCHAR(255);
+
 
 CREATE TABLE comments (
     id SERIAL NOT NULL PRIMARY KEY,
