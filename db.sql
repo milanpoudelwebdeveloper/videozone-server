@@ -9,6 +9,9 @@ CREATE TABLE channels (
 );
 
 
+
+ALTER TABLE channels ADD COLUMN description VARCHAR(255);
+
 CREATE TABLE subscriptions (
     id SERIAL NOT NULL PRIMARY KEY,
     subscriberId INT NOT NULL REFERENCES channels(id),
@@ -72,3 +75,19 @@ CREATE TABLE comments (
     createdAt TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
+
+CREATE TABLE playlists (
+    id SERIAL NOT NULL PRIMARY KEY,
+    channelId INT NOT NULL REFERENCES channels(id),
+    title VARCHAR(255) NOT NULL,
+    createdAt TIMESTAMP NOT NULL DEFAULT NOW()
+   
+);
+
+
+CREATE TABLE playlistVideo (
+    id SERIAL NOT NULL PRIMARY KEY,
+    playlistId INT NOT NULL REFERENCES playlists(id),
+    videoId INT NOT NULL REFERENCES video(id),
+    createdAt TIMESTAMP NOT NULL DEFAULT NOW()
+)

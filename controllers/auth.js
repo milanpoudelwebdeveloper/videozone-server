@@ -52,7 +52,7 @@ export const login = async (req, res) => {
         },
         process.env.ACCESS_SECRET_KEY,
         {
-          expiresIn: "1m",
+          expiresIn: "10m",
         }
       );
       const refreshToken = jwt.sign(
@@ -61,7 +61,7 @@ export const login = async (req, res) => {
         },
         process.env.REFRESH_SECRET_KEY,
         {
-          expiresIn: "10m",
+          expiresIn: "1d",
         }
       );
       const { password, ...others } = user;
@@ -132,7 +132,7 @@ export const refreshToken = async (req, res) => {
             { id: decoded.id },
             process.env.ACCESS_SECRET_KEY,
             {
-              expiresIn: "1m",
+              expiresIn: "10m",
             }
           );
           const foundUser = await db.query(

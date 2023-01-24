@@ -62,3 +62,73 @@ export const unSubscribe = async (req, res) => {
     });
   }
 };
+
+export const getSubscriptions = async (req, res) => {
+  try {
+    const q = await db.query(
+      "SELECT s.*, c.id as channelId, c.name as channelName, description, c.img as channelImage, (SELECT COUNT(*) FROM video as v WHERE v.channelId = s.channelId) as videosCount,(SELECT COUNT(*) FROM subscriptions as su  WHERE su.channelId = s.channelId) as subscribersCount FROM subscriptions as s JOIN channels as c ON c.id = s.channelId WHERE  s.subscriberId = $1 AND s.channelId != $1;",
+      [req.user]
+    );
+    res.status(200).json({
+      message: "Subscriptions fetched successfully",
+      subscriptions: q.rows,
+    });
+  } catch (e) {
+    console.log("Something went wrong while getting subscriptions", e);
+    res.status(500).json({
+      message: "Something went wrong while getting subscriptions",
+    });
+  }
+};
+
+export const getPlaylists = async (req, res) => {
+  try {
+    const q = await db.query("SELECT * FROM playlists WHERE channelId = $1", [
+      req.user,
+    ]);
+    res.status(200).json({
+      message: "Playlists fetched successfully",
+      playlists: q.rows,
+    });
+  } catch (e) {
+    console.log("Something went wrong while getting playlists", e);
+    res.status(500).json({
+      message: "Something went wrong while getting playlists",
+    });
+  }
+};
+
+export const createPlaylist = async () => {
+  try {
+    const q = await db.query(
+      "INSERT INTO playlists (channelId, title) VALUES ($1, $2)",
+      [req.user, req.body.title]
+    );
+    res.status(200).json({
+      message: "Playlist created successfully",
+      playlist: q.rows[0],
+    });
+  } catch (e) {
+    console.log("Something went wrong while creating playlists", e);
+    res.status(500).json({
+      message: "Something went wrong while creating playlist",
+    });
+  }
+};
+
+export const addIntoPlaylist = async (req, res) => {
+  try {
+    const q = await db.query(
+      "INSERT INTO playlistVideo (playlistId, videoId) VALUES ($1, $2)",
+      [req.params.id, req.body.videoId]
+    );
+    res.status(200).json({
+      message: "Video added into playlist successfully",
+    });
+  } catch (e) {
+    console.log("Something went wrong while adding into playlists", e);
+    res.status(500).json({
+      message: "Something went wrong while adding into playlist",
+    });
+  }
+};

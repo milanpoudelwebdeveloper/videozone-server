@@ -3,6 +3,7 @@ import { unAuthVerify, verifyToken } from "../middlewares/verifyJwt.js";
 import {
   deleteVideo,
   dislikeVideo,
+  getchannelVideos,
   getVideoDetails,
   getVideos,
   likeVideo,
@@ -19,5 +20,6 @@ router.put("/:id", verifyToken, updateVideo);
 router.delete("/:id", verifyToken, deleteVideo);
 router.put("/like/:id", verifyToken, likeVideo);
 router.put("/dislike/:id", verifyToken, dislikeVideo);
+router.get("/channel/:id", unAuthVerify, getchannelVideos);
 
 export default router;

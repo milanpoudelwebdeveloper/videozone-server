@@ -78,13 +78,13 @@ export const updateVideo = async (req, res) => {
 export const getVideos = async (req, res) => {
   let extraPath = "";
   let category = req.params.category;
-  if (category && category !== "All") {
+  if (category && category !== "all") {
     extraPath = `WHERE category = '${category}'`;
   }
 
   try {
     const q = await db.query(
-      `SELECT v.*, c.name as channelName FROM video as v JOIN channels as c ON (v.channelId = c.id) ${extraPath}  ORDER BY v.createdAt DESC `
+      `SELECT v.*, c.name as channelName, c.img as channelImage FROM video as v JOIN channels as c ON (v.channelId = c.id) ${extraPath}  ORDER BY v.createdAt DESC `
     );
     if (q.rows.length > 0) {
       res.status(200).json({
@@ -115,16 +115,21 @@ export const getVideoDetails = async (req, res) => {
       "SELECT v.*, (SELECT EXISTS (SELECT 1 FROM subscriptions as s WHERE v.channelId = s.channelId AND s.subscriberId = $2 )) as subscribedByMe,  (SELECT liked FROM likes WHERE likes.userId = $2 AND likes.videoId = $1) as likedByMe, (SELECT COUNT(*) FROM subscriptions as s WHERE s.channelId=v.channelId) AS subscribeCount, (SELECT COUNT(*) FROM likes as l WHERE l.videoId=v.id AND l.likeValue = 1) AS likedCount,(SELECT COUNT(*) FROM likes as l WHERE l.videoId=v.id AND l.likeValue = 0) AS dislikeCount , c.id AS channelId, name as channelName, c.img as channelImage FROM video as v INNER JOIN channels AS c ON (c.id = v.channelId)  LEFT JOIN likes AS l ON (l.videoId = v.id)  WHERE v.id = $1",
       [req.params.id, req.user]
     );
+
     console.log("hey the q second here is", q);
     if (q.rows.length > 0) {
       await db.query(
         "UPDATE video SET videoViews = videoViews + 1 WHERE id = $1",
         [req.params.id]
       );
-      console.log("the video details is", q.rows[0]);
+      const q1 = await db.query(
+        "SELECT * FROM video WHERE category = $1 AND id != $2",
+        [q.rows[0].category, req.params.id]
+      );
       return res.status(200).json({
         message: "Video details fetched successfully",
         video: q.rows[0],
+        recommendations: q1.rows,
       });
     }
   } catch (e) {
@@ -192,6 +197,30 @@ export const dislikeVideo = async (req, res) => {
     console.log("Something went wrong while disliking video", e);
     res.status(500).json({
       message: "Something went wrong while disliking video",
+    });
+  }
+};
+
+export const getchannelVideos = async (req, res) => {
+  try {
+    const q = await db.query("SELECT * FROM video WHERE channelId = $1", [
+      req.params.id,
+    ]);
+    if (q.rows.length > 0) {
+      res.status(200).json({
+        message: "Channel videos fetched successfully",
+        videos: q.rows,
+      });
+    } else {
+      res.status(200).json({
+        message: "Channel videos fetched successfully",
+        videos: [],
+      });
+    }
+  } catch (e) {
+    console.log("Something went wrong while getting channel videos", e);
+    res.status(500).json({
+      message: "Something went wrong while getting channel videos",
     });
   }
 };
