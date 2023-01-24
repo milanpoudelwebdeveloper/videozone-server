@@ -84,6 +84,8 @@ CREATE TABLE playlists (
    
 );
 
+ALTER TABLE playlists ADD COLUMN private BOOLEAN NOT NULL DEFAULT FALSE;
+
 
 CREATE TABLE playlistVideo (
     id SERIAL NOT NULL PRIMARY KEY,

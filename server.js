@@ -3,6 +3,7 @@ import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import videosRoutes from "./routes/videos.js";
 import commentRoutes from "./routes/comments.js";
+import playlistRoutes from "./routes/playlists.js";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
@@ -29,6 +30,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/videos", videosRoutes);
 app.use("/api/comments", commentRoutes);
+app.use("/api/playlists", playlistRoutes);
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => console.log(`Running on port ${port}...`));

@@ -12,7 +12,6 @@ export const verifyToken = (req, res, next) => {
         return res.status(401).json({
           message: "Not logged in, invalid token",
         });
-      console.log("something went wrong while verifying jwt in first");
       req.user = decoded.id;
       next();
     });
