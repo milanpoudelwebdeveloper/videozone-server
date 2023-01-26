@@ -224,3 +224,28 @@ export const getchannelVideos = async (req, res) => {
     });
   }
 };
+
+export const getLikedVideos = async (req, res) => {
+  try {
+    const q = await db.query(
+      "SELECT l.*, c.name as channelName, c.id as channelId,thumbnail , v.title as title, v.createdAt as createdAt , v.id as videoId, videoViews FROM likes as l JOIN channels as c ON(c.id = l.userId) JOIN video as v ON (v.id = l.videoId) WHERE l.userId = $1 AND l.liked = true ORDER BY l.createdAt DESC",
+      [req.params.channelId]
+    );
+    if (q.rows.length > 0) {
+      res.status(200).json({
+        message: "Liked videos fetched successfully",
+        likedVideos: q.rows,
+      });
+    } else {
+      res.status(200).json({
+        message: "Liked videos fetched successfully",
+        likedVideos: [],
+      });
+    }
+  } catch (e) {
+    console.log("Something went wrong while getting liked videos", e);
+    res.status(500).json({
+      message: "Something went wrong while getting liked videos",
+    });
+  }
+};

@@ -77,8 +77,6 @@ export const getVideoPlaylists = async (req, res) => {
 };
 
 export const deleteFromPlaylist = async (req, res) => {
-  console.log("the playlists id is", req.params.playlistId);
-  console.log("the video id is", req.body.videoId);
   try {
     await db.query(
       "DELETE FROM playlistVideo WHERE playlistId = $1 AND videoId = $2",

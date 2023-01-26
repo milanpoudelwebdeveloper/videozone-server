@@ -4,6 +4,7 @@ import {
   deleteVideo,
   dislikeVideo,
   getchannelVideos,
+  getLikedVideos,
   getVideoDetails,
   getVideos,
   likeVideo,
@@ -21,5 +22,6 @@ router.delete("/:id", verifyToken, deleteVideo);
 router.put("/like/:id", verifyToken, likeVideo);
 router.put("/dislike/:id", verifyToken, dislikeVideo);
 router.get("/channel/:id", unAuthVerify, getchannelVideos);
+router.get("/likedVideos/:channelId", getLikedVideos);
 
 export default router;

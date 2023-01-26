@@ -56,6 +56,7 @@ CREATE TABLE likes (
     userId INT NOT NULL REFERENCES channels(id),
     likeValue INT,
     liked BOOLEAN NOT NULL DEFAULT FALSE
+    createdAt TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
 
@@ -91,5 +92,13 @@ CREATE TABLE playlistVideo (
     id SERIAL NOT NULL PRIMARY KEY,
     playlistId INT NOT NULL REFERENCES playlists(id),
     videoId INT NOT NULL REFERENCES video(id),
+    createdAt TIMESTAMP NOT NULL DEFAULT NOW()
+)
+
+
+CREATE TABLE history (
+    id SERIAL NOT NULL PRIMARY KEY,
+    videoId INT NOT NULL REFERENCES video(id),
+    userId INT NOT NULL REFERENCES channels(id),
     createdAt TIMESTAMP NOT NULL DEFAULT NOW()
 )
