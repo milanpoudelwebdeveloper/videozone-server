@@ -2,7 +2,7 @@ import db from "../db/index.js";
 
 export const uploadVideo = async (req, res) => {
   const { title, descp, videoUrl, thumbnail, category } = req.body;
-  console.log("req user", req);
+
   try {
     const q = await db.query(
       "INSERT INTO video(channelId, title, descp, videoUrl, thumbnail, category) VALUES($1, $2, $3, $4, $5, $6) returning *",

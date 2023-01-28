@@ -69,10 +69,9 @@ export const addToHistory = async (req, res) => {
     } else {
       let video = q.rows[0];
       let lastWatched = moment(video?.createdAt);
-      let curretTime = moment();
-      let diff = moment.duration(curretTime.diff(lastWatched));
-      let days = diff.asDays();
-      if (days > 1) {
+      let today = moment().startOf("day");
+      let isSameDay = lastWatched.isSame(today, "day");
+      if (!isSameDay) {
         await db.query(
           "INSERT INTO history (userId, videoId) VALUES ($1, $2)",
           [req.user, req.params.videoId]
