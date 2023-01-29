@@ -149,6 +149,7 @@ export const refreshToken = async (req, res) => {
             res.cookie("accessToken", accessToken, {
               httpOnly: true,
               secure: true,
+              sameSite: "none",
             });
             return res.status(200).json({
               user: others,

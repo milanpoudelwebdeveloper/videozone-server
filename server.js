@@ -25,8 +25,11 @@ app.use(morgan("dev"));
 app.use(
   cors({
     origin: ["http://localhost:3000", "https://videozone-client.vercel.app"],
+    credentials: true,
   })
 );
+
+app.set("trust proxy", 1);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/videos", videosRoutes);
