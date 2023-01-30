@@ -8,6 +8,7 @@ import {
   getVideoDetails,
   getVideos,
   likeVideo,
+  searchVideos,
   updateVideo,
   uploadVideo,
 } from "../controllers/videos.js";
@@ -23,5 +24,6 @@ router.put("/like/:id", verifyToken, likeVideo);
 router.put("/dislike/:id", verifyToken, dislikeVideo);
 router.get("/channel/:id", unAuthVerify, getchannelVideos);
 router.get("/likedVideos/:channelId", getLikedVideos);
+router.get("/search/:keyword", searchVideos);
 
 export default router;

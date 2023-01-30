@@ -249,3 +249,31 @@ export const getLikedVideos = async (req, res) => {
     });
   }
 };
+
+export const searchVideos = async (req, res) => {
+  const keyword = req.params.keyword;
+
+  const value = "%" + keyword.toLowerCase() + "%";
+  try {
+    const q = await db.query(
+      "SELECT v.*, c.id as channelId, c.img as channelImage FROM video as v INNER JOIN channels as c ON (c.id = v.channelId) WHERE lower(title) LIKE $1 OR lower(category) LIKE $1 ",
+      [value]
+    );
+    if (q.rows.length > 0) {
+      res.status(200).json({
+        message: "Videos fetched successfully",
+        videos: q.rows,
+      });
+    } else {
+      res.status(200).json({
+        message: "Videos fetched successfully",
+        videos: [],
+      });
+    }
+  } catch (e) {
+    console.log("Something went wrong while searching videos", e);
+    res.status(500).json({
+      message: "Something went wrong while searching videos",
+    });
+  }
+};
