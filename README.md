@@ -1,7 +1,7 @@
 # videozone-server
 
 A video collection and player just like YouTube where you can add videos and generate thumbnails for the video. Just like youtube, users can
-like, dislike video, create a playlist and add videos, can see history and lots of other features.
+like, dislike video, create a playlist and add videos, can see history and lots of other different features.
 
 Main Features of the app: 
 
